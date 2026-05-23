@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>pymacros</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>python</interpreter>
+ <dsl-interpreter-name/>
+ <text>import pya
+
+# Enter your Python code here ..
+global Canvas
+
+class Canvas(object):
+
+  def __init__(self, layer = pya.LayerInfo(1, 0)):
+    self.layer = layer
+  
+  def __layer_def(self, l):
+    lay = pya.LayerInfo(l, 0)
+    self.lay = lay
+    return self.lay
+  
+  def __layout(self):
+    pya.LayoutView.current().cancel()
+    ly = pya.CellView.active().layout()
+    if not ly:
+      raise Exception("No layout available")
+    return ly
+  
+  def insert(self, x):
+    ly = self.__layout()
+    shapes = ly.top_cell().shapes(ly.layer(self.layer))
+    shapes.insert(x)
+    
+  def insert_custom(self, x, l):
+    ly = self.__layout()
+    shapes = ly.top_cell().shapes(ly.layer(self.__layer_def(l)))
+    shapes.insert(x)
+    
+  def clear(self):
+    ly = self.__layout()
+    ly.clear_layer(ly.layer(self.layer))
+
+canvas = Canvas()
+
+# b = pya.DBox(-0.5, 1.0, 0.5, 1.0)
+# canvas.insert(b)</text>
+</klayout-macro>

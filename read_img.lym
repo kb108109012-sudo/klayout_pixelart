@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<klayout-macro>
+ <description/>
+ <version/>
+ <category>pymacros</category>
+ <prolog/>
+ <epilog/>
+ <doc/>
+ <autorun>false</autorun>
+ <autorun-early>false</autorun-early>
+ <shortcut/>
+ <show-in-menu>false</show-in-menu>
+ <group-name/>
+ <menu-path/>
+ <interpreter>python</interpreter>
+ <dsl-interpreter-name/>
+ <text>import pya
+
+def render_pixel(pixel, x1, y1, x2, y2):
+  b = pya.DBox(x1, y1, x2, y2)
+  canvas.insert_custom(b, pixel)
+  print(b)
+  return b
+
+def render_row(pixel_row, rows, row, pixel_size, gap):
+  y1 = (rows-row)*pixel_size + (rows-row - 1)*gap
+  y2 = y1 + pixel_size 
+  row_pix = []
+  for col in range(len(pixel_row)):
+    x1 = col*(pixel_size + gap)  
+    x2 = x1 + pixel_size
+    pix = render_pixel(int(pixel_row[col])+1, x1, y1, x2, y2)
+    row_pix.append(pix)
+  
+  return row_pix
+
+def render_frame(file_path, pixel_size, gap):
+  with open(file_path, "r") as f:
+    all_data = f.readlines()
+    rows = len(all_data)
+    count = 0
+    for line in all_data:
+      #print(line)
+      pixel_row = line.split(" ")
+      #print(pixel_row)
+      row_pix = render_row(pixel_row, rows, count, pixel_size, gap)
+      count = count + 1
+
+file_path = "/home/keerthana/.klayout/pymacros/mapped_output/frame_0001.txt"
+
+render_frame(file_path, 1, 0.1)</text>
+</klayout-macro>
